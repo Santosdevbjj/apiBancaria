@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+pydantic[dotenv]
+sqlalchemy
+asyncpg                # Driver assíncrono para PostgreSQL
+psycopg2-binary        # Driver para conexões síncronas do Alembic
+alembic
+python-jose[cryptography] # Para JWT
+bcrypt                 # Para hash de senhas
