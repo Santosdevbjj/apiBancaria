@@ -212,7 +212,7 @@ Contribuições são bem-vindas para evoluir esta API!
 
 Sérgio Santos
 Profissional de TI com expertise em desenvolvimento de sistemas, infraestrutura e segurança.
-🌐 LinkedIn | 💻 GitHub
+
 
 
 ---
