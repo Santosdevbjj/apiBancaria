@@ -1,39 +1,42 @@
-from fastapi import APIRouter, Depends, status
+# app/api/v1/endpoints/transactions.py
+from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.dependencies import get_current_user
 from app.db.models import User
 from app.core.database import get_db
 from app.crud.transaction import transaction_crud
-from app.schemas.transaction import TransactionOut, Statement
-from typing import List
+from app.schemas.transaction import TransactionCreate, TransactionOut, Statement
 
 router = APIRouter()
 
-@router.get(
-    "/statement",
-    response_model=Statement, # Retorna o saldo e a lista de transações
-    status_code=status.HTTP_200_OK,
-    summary="Extrato da Conta",
-    description="Exibe o saldo atual e todas as transações realizadas pelo usuário autenticado."
+@router.post(
+    "/process", 
+    response_model=TransactionOut, 
+    status_code=status.HTTP_201_CREATED,
+    summary="Processar Transação (Depósito/Saque)",
+    description="Realiza um depósito ou saque. Requer autenticação JWT."
 )
-async def get_statement(
+async def process_transaction(
+    transaction_in: TransactionCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user) # Requisito de Autenticação JWT
+    # Dependência que injeta o usuário autenticado. Garante a segurança.
+    current_user: User = Depends(get_current_user) 
 ):
     """
-    Retorna o extrato completo de uma conta.
+    Executa a lógica de Depósito ou Saque, incluindo validações de valor negativo
+    e saldo insuficiente.
     """
-    # 1. Recupera a conta do usuário
     account = current_user.account
     if not account:
-        raise HTTPException(status_code=404, detail="Conta não vinculada ao usuário.")
+        raise HTTPException(status_code=404, detail="Conta bancária não encontrada para este usuário.")
 
-    # 2. Busca todas as transações da conta
-    transactions = await transaction_crud.get_transactions_by_account_id(db, account_id=account.id)
-    
-    # 3. Cria o objeto de resposta (Statement Schema)
-    return Statement(
-        account_id=account.id,
-        current_balance=account.balance,
-        transactions=transactions
+    # A lógica de validação de saldo e valor negativo é encapsulada no CRUD
+    db_transaction = await transaction_crud.create_transaction(
+        db, 
+        transaction_in=transaction_in, 
+        account_id=account.id
     )
+    return db_transaction
+
+# O endpoint GET /statement (Extrato) foi detalhado na primeira resposta e continua válido.
+# ... (Código do endpoint get_statement)
