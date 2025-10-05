@@ -16,7 +16,7 @@
 ![Docker](https://img.shields.io/badge/Docker-Compose-important)
 ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-Este projeto implementa uma **API RESTful de nível sênior** para gerenciamento de **operações bancárias** (depósito, saque e extratos), desenvolvida em **Python** com o framework assíncrono **FastAPI** e banco de dados **PostgreSQL**.  
+Este projeto implementa uma **API RESTful** para gerenciamento de **operações bancárias** (depósito, saque e extratos), desenvolvida em **Python** com o framework assíncrono **FastAPI** e banco de dados **PostgreSQL**.  
 A autenticação é baseada em **JWT (JSON Web Token)**, garantindo segurança no acesso aos endpoints protegidos.
 
 ---
@@ -97,6 +97,127 @@ POSTGRES_HOST=db
 SECRET_KEY="SUA_CHAVE_SECRETA_MUITO_LONGA_E_ALEATORIA"
 ALGORITHM="HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+---
+```
+
+
+
+2️⃣ **Inicializar com Docker Compose**
+
+Na raiz do projeto, execute:
+
+docker-compose up --build -d
+
+O Compose irá:
+
+Construir a imagem da API
+
+Subir o container do PostgreSQL
+
+Executar as migrações Alembic (alembic upgrade head)
+
+Iniciar o servidor Uvicorn/FastAPI
+
+
+
+---
+
+3️⃣ **Acessar a API**
+
+Após alguns segundos, a API estará disponível:
+
+Recurso	URL	Descrição
+
+🌐 Raiz	http://localhost:8000/	Confirma se a API está online
+📘 Swagger UI	http://localhost:8000/docs	Interface interativa para testar endpoints
+📕 ReDoc	http://localhost:8000/redoc	Documentação alternativa estilizada
+
+
+
+---
+
+4️⃣ **Primeiros Passos (Testes Rápidos)**
+
+1. **Registrar Usuário**
+POST /api/v1/users/register
+
+
+2. **Login**
+POST /api/v1/users/login → retorna access_token
+
+
+3. **Depósito ou Saque**
+POST /api/v1/transactions/process
+Headers:
+
+Authorization: Bearer <access_token>
+
+
+4. **Extrato Bancário**
+GET /api/v1/transactions/statement
+
+
+
+
+---
+
+5️⃣ **Parar os Serviços**
+
+Para encerrar e remover os contêineres:
+
+docker-compose down
+
+Para remover também o volume de dados:
+
+docker-compose down -v
+
+
+---
+
+🧪 **Tecnologias Utilizadas**
+
+**FastAPI** — Framework web moderno e assíncrono para APIs em Python
+
+**PostgreSQL** — Banco de dados relacional robusto
+
+**SQLAlchemy Async** — ORM para acesso ao banco assíncrono
+
+**Alembic** — Migrações de banco de dados
+
+**Docker** — Contêineres para ambiente consistente
+
+**JWT** — Autenticação segura via tokens
+
+
+
+---
+
+📜 **Licença**
+
+Este projeto está licenciado sob a MIT License.
+
+
+---
+
+🤝 **Contribuição**
+
+Sinta-se à vontade para abrir Issues e enviar Pull Requests.
+Contribuições são bem-vindas para evoluir esta API!
+
+
+---
+
+👨‍💻 **Autor**
+
+Sérgio Santos
+Profissional de TI com expertise em desenvolvimento de sistemas, infraestrutura e segurança.
+🌐 LinkedIn | 💻 GitHub
+
+
+---
+
+> 💡 Este repositório serve como base para estudos avançados de desenvolvimento backend com Python, arquitetura limpa e práticas modernas de API.
 
 ---
 
